@@ -7,9 +7,9 @@
     <ProjectGuid>{4D36E6A4-CAF0-42AA-B830-B5B133858934}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CanStick</RootNamespace>
-    <AssemblyName>CanStick</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>CanankaTest</RootNamespace>
+    <AssemblyName>CanankaTest</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -26,6 +26,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -63,16 +64,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="%28Medo%29\AboutBox [013].cs" />
+    <Compile Include="%28Medo%29\Config [005].cs" />
+    <Compile Include="%28Medo%29\ErrorReport [019].cs" />
     <Compile Include="%28Medo%29\MessageBox [007].cs" />
-    <Compile Include="%28Medo%29\Settings [013].cs" />
-    <Compile Include="%28Medo%29\State [015].cs" />
-    <Compile Include="%28Medo%29\UartPort [005a].cs" />
+    <Compile Include="%28Medo%29\State [016].cs" />
+    <Compile Include="%28Medo%29\UnhandledCatch [008].cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="ListViewEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -84,12 +88,32 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="App.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\SolutionInfo.cs" />
-    <Compile Include="CanStickDevice.cs" />
+    <Compile Include="%28Medo%29\Cananka [002].cs" />
+    <Compile Include="SendMessageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SendMessageForm.Designer.cs">
+      <DependentUpon>SendMessageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Strings.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SendMessageForm.resx">
+      <DependentUpon>SendMessageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\App.manifest" />
     <None Include="Properties\App.snk" />
   </ItemGroup>
