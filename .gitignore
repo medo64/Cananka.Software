@@ -1,11 +1,11 @@
 syntax: glob
 
-Binaries/**
-Source/*.suo
-Source/**/.vs
-Source/**/*.csproj.user
-Source/**/bin/*
-Source/**/obj/*
+bin/**
+src/*.suo
+src/**/.vs
+src/**/*.csproj.user
+src/**/bin/*
+src/**/obj/*
 
-Research/**
-Releases/**
+research/**
+releases/**
