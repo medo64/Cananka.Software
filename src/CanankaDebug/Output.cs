@@ -8,6 +8,12 @@ internal static class Output {
 
     private static readonly object Lock = new();
 
+    public static void WriteLine() {
+        lock (Lock) {
+            Console.WriteLine();
+        }
+    }
+
     public static void WriteErrorLine(string text) {
         lock (Lock) {
             Console.ForegroundColor = ConsoleColor.DarkGray;

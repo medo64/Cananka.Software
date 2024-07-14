@@ -38,21 +38,43 @@ internal static class CanankaDebug {
         }
 
         Output.WriteOkLine("Connected to SLCAN device (" + serialPortName + ").");
-        Loop();
+        Loop(cananka);
 
         cananka.Close();
         Output.WriteOkLine("Disconnected from SLCAN device (" + serialPortName + ").");
     }
 
 
-    private static void Loop() {
+    private static void Loop(Cananka cananka) {
+        var inverse = false;
+
         while (true) {
             var key = Console.ReadKey(intercept: true);
             switch (key.Key) {
-                case ConsoleKey.Escape:
+                case ConsoleKey.Escape:  // exit
                 case ConsoleKey.Q:
                     return;
+                case ConsoleKey.Enter:  // empty line
+                    Output.WriteLine();
+                    break;
+                case ConsoleKey.T:  // <T> turn on termination  <Del><t> turn off termination
+                    var newTerminationState = !inverse;
+                    if (cananka.SetTermination(newTerminationState)) {
+                        Output.WriteOkLine("Termination turned " + (newTerminationState ? "on" : "off"));
+                    } else {
+                        Output.WriteErrorLine("Cannot turn termination on" + (newTerminationState ? "on" : "off"));
+                    }
+                    break;
+                case ConsoleKey.P:  // <P> turn on power  <Del><t> turn off power
+                    var newPowerState = !inverse;
+                    if (cananka.SetPower(newPowerState)) {
+                        Output.WriteOkLine("Power turned " + (newPowerState ? "on" : "off"));
+                    } else {
+                        Output.WriteErrorLine("Cannot turn power on" + (newPowerState ? "on" : "off"));
+                    }
+                    break;
             }
+            if (key.Key == ConsoleKey.Delete) { inverse = !inverse; } else { inverse = false; }
         }
 
     }
