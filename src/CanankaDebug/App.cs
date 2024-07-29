@@ -73,7 +73,7 @@ internal static class CanankaDebug {
                         if (cananka.SetTermination(newTerminationState)) {
                             Output.WriteOkLine("Termination turned " + (newTerminationState ? "on" : "off"));
                         } else {
-                            Output.WriteErrorLine("Cannot turn termination on" + (newTerminationState ? "on" : "off"));
+                            Output.WriteErrorLine("Cannot turn termination " + (newTerminationState ? "on" : "off"));
                         }
                         break;
 
@@ -82,7 +82,7 @@ internal static class CanankaDebug {
                         if (cananka.SetPower(newPowerState)) {
                             Output.WriteOkLine("Power turned " + (newPowerState ? "on" : "off"));
                         } else {
-                            Output.WriteErrorLine("Cannot turn power on" + (newPowerState ? "on" : "off"));
+                            Output.WriteErrorLine("Cannot turn power " + (newPowerState ? "on" : "off"));
                         }
                         break;
 
@@ -103,7 +103,6 @@ internal static class CanankaDebug {
                 Output.WriteMessageLine(entry.Item1, entry.Item2);
             }
         }
-
     }
 
     private static void EditMode(Cananka cananka) {
