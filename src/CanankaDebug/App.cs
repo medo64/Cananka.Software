@@ -43,6 +43,13 @@ internal static class CanankaDebug {
             Environment.Exit(113);
         }
 
+        Output.WriteInfoLine("<E>dit mode");
+        Output.WriteInfoLine("<P>ower on (<Del><P>ower off)");
+        Output.WriteInfoLine("<T>ermination on (<Del><T>ermination off)");
+        Output.WriteInfoLine("<S>tatus (only valid for Medo64 CAN devices)");
+        Output.WriteInfoLine("<V>ersion");
+        Output.WriteInfoLine("<Q>uit");
+
         Output.WriteOkLine("Connected to SLCAN device (" + serialPortName + ").");
         Loop(cananka);
 
@@ -94,6 +101,14 @@ internal static class CanankaDebug {
                     case ConsoleKey.E:  // <E> edit mode
                         EditMode(cananka);
                         break;
+
+                    case ConsoleKey.V:  // <V> version
+                        var version = cananka.GetVersion();
+                        Output.WriteInfoLine("Hardware " + version.HardwareVersion);
+                        Output.WriteInfoLine("Software " + version.SoftwareVersion);
+
+                        break;
+
                 }
                 if (key.Key == ConsoleKey.Delete) { inverse = !inverse; } else { inverse = false; }
             }

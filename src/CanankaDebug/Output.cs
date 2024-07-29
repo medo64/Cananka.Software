@@ -46,6 +46,18 @@ internal static class Output {
         }
     }
 
+    public static void WriteInfoLine(string text) {
+        lock (Lock) {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write(DateTime.Now.ToString("HH:mm:ss.fff", CultureInfo.InvariantCulture));
+            Console.Write(" ");
+
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(text);
+            Console.ResetColor();
+        }
+    }
+
     public static void WriteMessageLine(CanankaMessage message, DateTime timestamp) {
         lock (Lock) {
             var id = message.Id;
