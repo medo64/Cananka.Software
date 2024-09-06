@@ -44,8 +44,8 @@ internal static class CanankaDebug {
         }
 
         Output.WriteInfoLine("<E>dit mode");
-        Output.WriteInfoLine("<P>ower on (<Del><P>ower off)");
-        Output.WriteInfoLine("<T>ermination on (<Del><T>ermination off)");
+        Output.WriteInfoLine("<P>ower status (<Ins><P>ower on, <Del><P>ower off)");
+        Output.WriteInfoLine("<T>ermination status (<Ins><T>ermination on, <Del><T>ermination off)");
         Output.WriteInfoLine("<S>tatus (only valid for Medo64 CAN devices)");
         Output.WriteInfoLine("<V>ersion");
         Output.WriteInfoLine("<Q>uit");
@@ -60,7 +60,8 @@ internal static class CanankaDebug {
     private static readonly ConcurrentQueue<(CanankaMessage, DateTime)> MessagesIn = new();
 
     private static void Loop(Cananka cananka) {
-        var inverse = false;
+        var nextInsert = false;
+        var nextDelete = false;
 
         while (true) {
             // handle keyboard
@@ -75,21 +76,49 @@ internal static class CanankaDebug {
                         Output.WriteLine();
                         break;
 
-                    case ConsoleKey.T:  // <T> turn on termination  <Del><T> turn off termination
-                        var newTerminationState = !inverse;
-                        if (cananka.SetTermination(newTerminationState)) {
-                            Output.WriteOkLine("Termination turned " + (newTerminationState ? "on" : "off"));
+                    case ConsoleKey.T:  // <Ins><T> turn on termination  <Del><T> turn off termination
+                        var newTerminationState = default(bool?);
+                        if (nextInsert) {
+                            newTerminationState = true;
+                        } else if (nextDelete) {
+                            newTerminationState = false;
                         } else {
-                            Output.WriteErrorLine("Cannot turn termination " + (newTerminationState ? "on" : "off"));
+                            var status = cananka.GetExtendedStatus();
+                            if (status.IsValid) {
+                                Output.WriteOkLine("Termination is " + (status.TerminationEnabled ? "on" : "off"));
+                            } else {
+                                Output.WriteErrorLine("Cannot return termination status.");
+                            }
+                        }
+                        if (newTerminationState != null) {
+                            if (cananka.SetTermination(newTerminationState.Value)) {
+                                Output.WriteOkLine("Termination turned " + (newTerminationState.Value ? "on" : "off"));
+                            } else {
+                                Output.WriteErrorLine("Cannot turn termination " + (newTerminationState.Value ? "on" : "off"));
+                            }
                         }
                         break;
 
                     case ConsoleKey.P:  // <P> turn on power  <Del><T> turn off power
-                        var newPowerState = !inverse;
-                        if (cananka.SetPower(newPowerState)) {
-                            Output.WriteOkLine("Power turned " + (newPowerState ? "on" : "off"));
+                        var newPowerState = default(bool?);
+                        if (nextInsert) {
+                            newPowerState = true;
+                        } else if (nextDelete) {
+                            newPowerState = false;
                         } else {
-                            Output.WriteErrorLine("Cannot turn power " + (newPowerState ? "on" : "off"));
+                            var status = cananka.GetExtendedStatus();
+                            if (status.IsValid) {
+                                Output.WriteOkLine("Power is " + (status.PowerEnabled ? "on" : "off"));
+                            } else {
+                                Output.WriteErrorLine("Cannot return power status.");
+                            }
+                        }
+                        if (newPowerState != null) {
+                            if (cananka.SetPower(newPowerState.Value)) {
+                                Output.WriteOkLine("Power turned " + (newPowerState.Value ? "on" : "off"));
+                            } else {
+                                Output.WriteErrorLine("Cannot turn power " + (newPowerState.Value ? "on" : "off"));
+                            }
                         }
                         break;
 
@@ -110,7 +139,17 @@ internal static class CanankaDebug {
                         break;
 
                 }
-                if (key.Key == ConsoleKey.Delete) { inverse = !inverse; } else { inverse = false; }
+
+                if (key.Key == ConsoleKey.Insert) {
+                    nextInsert = true;
+                    nextDelete = false;
+                } else if (key.Key == ConsoleKey.Delete) {
+                    nextInsert = false;
+                    nextDelete = true;
+                } else {
+                    nextInsert = false;
+                    nextDelete = false;
+                }
             }
 
             // process incoming messages
